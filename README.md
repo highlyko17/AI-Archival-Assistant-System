@@ -1,4 +1,4 @@
-# 기록물 관리 보조 시스템 <br/>AI Archival Assistant System
+# 기록물 관리 보조 시스템 AI Archival Assistant System
 
 ## 🖥️ 프로그램 소개
 전자정부프레임워크를 기반으로 개발된 기록물 보조 시스템. 

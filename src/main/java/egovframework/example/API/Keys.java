@@ -2,7 +2,7 @@ package egovframework.example.API;
 
 public class Keys {
 	//add own key
-		public static String OPENAPI_KEY = "API Key ÀÔ·Â";
+		public static String OPENAPI_KEY = "API Key ìž…ë ¥";
 		//public static String OPENAPI_ORGKEY = "";
 		//public static String PINECONE_KEY = "";
 		
