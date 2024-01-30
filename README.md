@@ -8,14 +8,14 @@ OpenAI의 Whisper 모델을 사용하여 자동으로 오디오나 영상 기록
 사용가이드 참고
 
 ## 🛠️ 개발자
-#### 🧑🏻‍💻 지우형
-우주大락스타
+**🧑🏻‍💻 지우형**
+<br/>우주大락스타
 <br/>🔗 [Github](https://github.com/Here-Comes-The-Sun)
 
-#### 👩🏻‍💻 고혜리
-Developer from Hell
+**👩🏻‍💻 고혜리**
+<br/>Developer from Hell
 <br/>🔗 [Github](https://github.com/highlyko17)
 
-#### 👩🏻‍💻 김민경
-General God
+**👩🏻‍💻 김민경**
+<br/>General God
 <br/>🔗 [Github](https://github.com/MinkyoungKim-22100090)
