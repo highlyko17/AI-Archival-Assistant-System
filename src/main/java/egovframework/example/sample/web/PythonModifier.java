@@ -108,14 +108,14 @@ public class PythonModifier {
           String whispEnVarDir =osd.getProjectPath()+"resources\\win\\whisper\\";
           String ffmpegEnVarDir =osd.getProjectPath()+"resources\\win\\ffmpeg-master-latest-win64-gpl\\bin\\";
 
-          whisperCommand = "powershell.exe -Command \"Set-Item -Path Env:PYTHONPATH -Value '"+whispEnVarDir+"'; [Environment]::SetEnvironmentVariable('Path', \\\"$([System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Process));"+ffmpegEnVarDir+"\", [System.EnvironmentVariableTarget]::Process); & '"+pythonPath+"' '"+osd.getWhisper_addr()+"' --output_dir '"+osd.getSrt_dir_address()+"' --output_format srt --model small '"+absolutePathString+"'\"";
+          whisperCommand = "powershell.exe -Command \"Set-Item -Path Env:PYTHONPATH -Value '"+whispEnVarDir+"'; [Environment]::SetEnvironmentVariable('Path', \\\"$([System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Process));"+ffmpegEnVarDir+"\", [System.EnvironmentVariableTarget]::Process); & '"+pythonPath+"' '"+osd.getWhisper_addr()+"' --output_dir '"+osd.getSrt_dir_address()+"' --output_format srt --model tiny '"+absolutePathString+"'\"";
     
        }
        else {
           String whispEnVarDir =osd.getProjectPath()+"resources\\win\\whisper\\";
           String ffmpegEnVarDir =osd.getProjectPath()+"resources\\win\\ffmpeg-master-latest-win64-gpl\\bin\\";
 
-          whisperCommand = "powershell.exe -Command \"Set-Item -Path Env:PYTHONPATH -Value '"+whispEnVarDir+"'; [Environment]::SetEnvironmentVariable('Path', \\\"$([System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Process));"+ffmpegEnVarDir+"\", [System.EnvironmentVariableTarget]::Process); & '"+pythonPath+"' '"+osd.getWhisper_addr()+"' --output_dir '"+osd.getSrt_dir_address()+"' --output_format srt --language "+lang+" --model small '"+absolutePathString+"'\"";
+          whisperCommand = "powershell.exe -Command \"Set-Item -Path Env:PYTHONPATH -Value '"+whispEnVarDir+"'; [Environment]::SetEnvironmentVariable('Path', \\\"$([System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Process));"+ffmpegEnVarDir+"\", [System.EnvironmentVariableTarget]::Process); & '"+pythonPath+"' '"+osd.getWhisper_addr()+"' --output_dir '"+osd.getSrt_dir_address()+"' --output_format srt --language "+lang+" --model tiny '"+absolutePathString+"'\"";
        }
 	}
 	
@@ -211,7 +211,7 @@ public class PythonModifier {
                           "\""+
                           " "+
                           "--output_format srt "+
-                          "--model small "+
+                          "--model tiny "+
                           "\""+
                           absolutePathString+
                           "\"";
@@ -239,7 +239,7 @@ public class PythonModifier {
                           "--output_format srt "+
                           "--language "+
                           lang+" "+
-                          "--model small "+
+                          "--model tiny "+
                           "\""+
                           absolutePathString+
                           "\"";

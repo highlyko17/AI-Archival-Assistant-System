@@ -22,11 +22,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.audio.CreateTranscriptionRequest;
@@ -36,14 +38,13 @@ import com.theokanning.openai.service.OpenAiService;
 
 import egovframework.example.API.Keys;
 
-@RestController
+@Controller
 public class TagExtract {
 	private static final Logger logger = LogManager.getLogger(EgovSampleController.class);
 	
 	@PostMapping("/extract-tag.do")
-	@ResponseBody
-	public ResponseEntity<?> extractTagsUsingWhisper(@RequestParam MultipartFile file, HttpServletRequest request)
-			throws IOException, InterruptedException {
+	public ModelAndView extractTagsUsingWhisper(@RequestParam("file") MultipartFile file, HttpServletRequest request)
+	        throws IOException, InterruptedException {
 		long startTime = System.currentTimeMillis();
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
@@ -66,7 +67,9 @@ public class TagExtract {
             response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResponse = objectMapper.writeValueAsString(response);
-            return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+            ModelAndView modelAndView = new ModelAndView();
+		    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+		    return modelAndView;
         }
 
 		FileController fc = new FileController(response, file, osd);
@@ -84,8 +87,9 @@ public class TagExtract {
 		/* ffmpeg */
 		extractedAudio = fc.runFfmpeg(extractedAudio);
 		if (extractedAudio != null && extractedAudio.length() > 26214400) {
-			return new ResponseEntity<>("오디오만 추출했음에도 파일의 크기가 26214400bytes를 초과합니다. 파일을 분할하여 주세요.", headers,
-					HttpStatus.OK);
+			ModelAndView modelAndView = new ModelAndView();
+		    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+		    return modelAndView;
 		}
 
 		// 받아온 주소를 whisper에게 보내
@@ -112,6 +116,10 @@ public class TagExtract {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonResponse = objectMapper.writeValueAsString(response);
 
-		return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+		ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("tag"); // 반환할 JSP 파일 경로 설정
+        modelAndView.addObject("tag", summary_result); // 결과 데이터를 모델에 추가
+
+        return modelAndView;
 	}
 }

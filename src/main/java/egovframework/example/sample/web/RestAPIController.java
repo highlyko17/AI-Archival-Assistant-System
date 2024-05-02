@@ -23,8 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -189,4 +192,32 @@ public class RestAPIController {
 
 		return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
 	}
+	@PostMapping("/send-string.do")
+    @ResponseBody
+    public String sendString(@RequestParam("inputString") String inputString) {
+        // Flask 애플리케이션의 엔드포인트 URL
+        String url = "http://172.18.143.169:8888/process-string";
+
+        // 보낼 문자열
+        String data = inputString;
+
+        // RestTemplate 생성
+        RestTemplate restTemplate = new RestTemplate();
+
+        // HTTP 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+
+        // HTTP 요청 본문과 헤더 설정
+        HttpEntity<String> request = new HttpEntity<>(data, headers);
+
+        // HTTP POST 요청 보내기
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+        // 응답 출력
+        System.out.println("Response: " + response.getBody());
+
+        // 결과 반환
+        return response.getBody();
+    }
 }

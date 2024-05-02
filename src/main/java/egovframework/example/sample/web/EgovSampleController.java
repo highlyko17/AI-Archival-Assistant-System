@@ -292,24 +292,33 @@ public class EgovSampleController {
 
 	//jsp에 저장버튼 추가 후 restapi로 보내기
 	@RequestMapping(value = "/summarize.do", method = RequestMethod.POST)
-    public String showSummaryResult(@RequestParam String transcription_result, Model model) {
-        OpenAiService service = new OpenAiService(Keys.OPENAPI_KEY,Duration.ofMinutes(9999));
-        List<ChatMessage> message = new ArrayList<ChatMessage>();
-    	message.add(new ChatMessage("user", "텍스트의 주제를 파악해서 해당 언어로 다섯줄 내외 요약해줘 \""+transcription_result+"\""));
-        
-        ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
-        	.messages(message)
-            .model("gpt-3.5-turbo") 
-            
-            .maxTokens(1500)
-            .temperature((double) 0.5f)
-            .build();
-        String summary_restult=service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent();
-        model.addAttribute("summary_result",summary_restult);
-        
-        return "sample/summarize";
-    }
-	
+	public String showSummaryResult(@RequestParam String transcription_result, Model model) {
+	    // OpenAI 서비스 초기화
+	    OpenAiService service = new OpenAiService(Keys.OPENAPI_KEY, Duration.ofMinutes(9999));
+
+	    // ChatMessage 생성
+	    List<ChatMessage> message = new ArrayList<>();
+	    message.add(new ChatMessage("user", "텍스트의 주제를 파악해서 해당 언어로 다섯줄 내외 요약해줘 \"" + transcription_result + "\""));
+
+	    // ChatCompletionRequest 생성
+	    ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
+	            .messages(message)
+	            .model("gpt-3.5-turbo")
+	            .maxTokens(1500)
+	            .temperature((double) 0.5f)
+	            .build();
+
+	    // ChatCompletion을 통해 요약 진행
+	    String summary_result = service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent();
+
+	    // 모델에 요약 결과 추가
+	    model.addAttribute("summary_result", summary_result);
+
+	    // JSP 페이지 반환
+	    return "sample/summarize";
+	}
+
+
 	
 	//파일을 임시저장 후 file.do에 경로를 보냄.
 	@RequestMapping(value = "/postfile.do", method = RequestMethod.POST)
