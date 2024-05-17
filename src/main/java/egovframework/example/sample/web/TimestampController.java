@@ -128,12 +128,12 @@ public class TimestampController {
          Result rslt = new Result();
          response = rslt.getResult(response, fc.getFile_size(), summary_result, executionTime, srt_content);
 
-         ObjectMapper objectMapper = new ObjectMapper();
-         String jsonResponse = objectMapper.writeValueAsString(response);
+         //ObjectMapper objectMapper = new ObjectMapper();
+         //String jsonResponse = objectMapper.writeValueAsString(response);
 
          fc.deleteFile(origin_absolutePathString);
          fc.deleteSrtFile(osd.getSrt_address());
          
-         return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+         return new ResponseEntity<>(response, headers, HttpStatus.OK);
       }
 }

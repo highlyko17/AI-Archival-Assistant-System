@@ -98,7 +98,7 @@ public class TagExtract {
 
 		fc.deleteFile(origin_absolutePathString);
 		
-		String str = "다음 텍스트의 주요한 태그를 중요한 순서대로 5개를 쉼표를 구분자로 사용해서 추출해줘.: \"";
+		String str = "다음 텍스트의 주요한 태그를 중요한 순서대로 5개를 JSON format으로 추출해줘.: \"";
 		String summary_result = wc.getResult(str);
 
 		Result rslt = new Result();
@@ -109,9 +109,7 @@ public class TagExtract {
 		logger.debug(summary_result);
 		logger.info("Execution time:"+executionTime);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jsonResponse = objectMapper.writeValueAsString(response);
-
-		return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+		
+		return new ResponseEntity<>(response, headers, HttpStatus.OK);
 	}
 }

@@ -107,10 +107,10 @@ public class Summary {
 		response = rslt.getResult(response, fc.getFile_size(), summary_result, executionTime);
 		logger.debug(summary_result);
 		logger.info("Execution time:"+executionTime);
+		
+		//ObjectMapper objectMapper = new ObjectMapper();
+		//String jsonResponse = objectMapper.writeValueAsString(response);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jsonResponse = objectMapper.writeValueAsString(response);
-
-		return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+		return new ResponseEntity<>(response, headers, HttpStatus.OK);
 	}
 }
