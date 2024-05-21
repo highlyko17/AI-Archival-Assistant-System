@@ -53,7 +53,7 @@ import com.theokanning.openai.service.OpenAiService;
 import egovframework.example.API.Keys;
 
 @Controller
-public class ModelAndViewController {
+public class Temp {
 	private static final Logger logger = LogManager.getLogger(EgovSampleController.class);
 
 	@PostMapping("summarize-vid-mnv.do")
@@ -204,7 +204,7 @@ public class ModelAndViewController {
 	}
 	
 	 @PostMapping("/timestamp-mnv.do")
-     public ModelAndView extractTimestamp(
+     public ResponseEntity<?> extractTimestamp(
            @RequestParam MultipartFile file, 
            @RequestParam("searchfor") String searchfor, 
            @RequestParam(name = "lang", required = false) String lang,
@@ -237,15 +237,15 @@ public class ModelAndViewController {
         osd.whisperDetection();
         
         Path resource_path = Paths.get(osd.getResource_address());
-//        if (!Files.exists(resource_path)) {
-//            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
-//            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
-//            
-//            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String jsonResponse = objectMapper.writeValueAsString(response);
-//            return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
-//        }
+        if (!Files.exists(resource_path)) {
+            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
+            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
+            
+            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonResponse = objectMapper.writeValueAsString(response);
+            return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+        }
         
         FileController fc = new FileController(response, file, osd);
         fc.exist();
@@ -260,11 +260,9 @@ public class ModelAndViewController {
         File extractedAudio = null;
         extractedAudio = fc.runFfmpeg(extractedAudio);
         if (extractedAudio != null && extractedAudio.length() > 26214400) {
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
-			modelAndView.addObject("errorMessage", "오디오만 추출했음에도 파일의 크기가 26214400bytes를 초과합니다. 파일을 분할하여 주세요.");
-			return modelAndView;
-		}
+       	 return new ResponseEntity<>("오디오만 추출했음에도 파일의 크기가 26214400bytes를 초과합니다. 파일을 분할하여 주세요.", headers,
+					HttpStatus.OK);
+        }
         
         
         PythonModifier pc = new PythonModifier(osd, locOfPython, lang, absolutePathString);
@@ -289,14 +287,11 @@ public class ModelAndViewController {
 
         //ObjectMapper objectMapper = new ObjectMapper();
         //String jsonResponse = objectMapper.writeValueAsString(response);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
-		modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
-		
+
         fc.deleteFile(origin_absolutePathString);
         fc.deleteSrtFile(osd.getSrt_address());
         
-        return modelAndView;
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
      }
 
 }

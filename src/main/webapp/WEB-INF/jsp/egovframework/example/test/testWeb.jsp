@@ -169,7 +169,7 @@
 
             form.elements['searchfor'].value = searchforInput.value;
             form.elements['pythonPath'].value = pythonPath.value;
-            form.action = 'timestamp.do';
+            form.action = 'timestamp-mnv.do';
 
             form.submit();
         }
