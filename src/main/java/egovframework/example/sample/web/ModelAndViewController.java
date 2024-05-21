@@ -317,7 +317,7 @@ public class ModelAndViewController {
 	        
 	        logger.debug("projectPath: " + projectPath);
 	        if(ppl!=null) {
-	           logger.debug("lang: " + ppl);
+	           logger.debug("ppl: " + ppl);
 	        }
 
 	        /* OS detection */
