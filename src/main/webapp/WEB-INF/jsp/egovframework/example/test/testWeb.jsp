@@ -7,58 +7,63 @@
     <meta charset="UTF-8">
     <title>form</title>
     <style>
-    	/* 파일 업로드 input 요소 스타일링 */
+        /* 파일 업로드 input 요소 스타일링 */
         .custom-file-input {
-		    display: inline-block;
-		    position: relative;
-		    font-size: 11px;
-		    color: #fff;
-		    background-color: #007bff;
-		    border: none;
-		    border-radius: 5px;
-		    padding: 8px 20px;
-		    cursor: pointer;
-		    outline: none;
-		    transition: all 0.3s ease;
-		    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-		}
-		
-		.custom-file-input:hover {
-		    background-color: #0056b3;
-		}
-		
-		.custom-file-input input[type="file"] {
-		    position: absolute;
-		    left: 0;
-		    top: 0;
-		    opacity: 0;
-		    cursor: pointer;
-		    width: 100%;
-		    height: 100%;
-		}
-    	
+            display: inline-block;
+            position: relative;
+            font-size: 11px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 20px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+        }
+        
+        .custom-file-input:hover {
+            background-color: #0056b3;
+        }
+        
+        .custom-file-input input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
         }
 
-        form {
-            width: 60%;
-            margin-left: 10%; /* 왼쪽 여백 추가 */
-    		margin-right: 10%; /* 오른쪽 여백 추가 */
-            background-color: #fff;
-            padding-left: 30px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+        .container {
+		    width: 60%;
+		    background-color: #fff;
+		    padding: 30px;
+		    border-radius: 5px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		    
+		}
 
-        h3 {
-		    font-size: 24px; /* Adjust the font size as needed */
-		    color: gray; /* Choose your desired color */
-		    padding: 20px; /* Add padding to create space around the text */
-		    margin-left: 40%;
+        h3.title {
+		    font-size: 24px;
+		    color: gray;
+		    text-align: center;
+		    padding: 20px;
+		    margin-top: -20px; /* Add negative margin to move it upwards */
 		}
 
         fieldset {
@@ -74,9 +79,10 @@
 
         table {
             border-collapse: collapse;
-            box-shadow: 0 2px 5px rgba(0,0,0,.25);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
             border-radius: 5px;
-            width: 30%;
+            width: 60%;
+            margin-top: 20px;
         }
 
         th, td {
@@ -93,21 +99,20 @@
         }
 
         input[type="text"] {
-		    width: 25%;
-		    margin-bottom: 10px;
-		    padding: 8px;
-		    box-sizing: border-box;
-		    border-radius: 5px;
-		    border: 0px solid #ccc; /* 테두리 추가 */
-		    transition: border-color 0.3s ease; /* 부드러운 전환 효과 */
-		    box-shadow: 0 1px 5px rgba(0,0,0,.25);
-		}
-		
-		/* 포커스 효과 추가 */
-		input[type="text"]:focus {
-		    outline: none;
-		    box-shadow: grey;
-		}
+            width: 60%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 0px solid #ccc;
+            transition: border-color 0.3s ease;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: grey;
+        }
 
         input[type="submit"], input[type="reset"], input[type="button"] {
             padding: 8px 20px;
@@ -116,7 +121,7 @@
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
-            box-shadow: 0 1px 5px rgba(0,0,0,.25);   
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);   
         }
 
         input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
@@ -173,6 +178,24 @@
 
             form.submit();
         }
+        function submitNoteForm() {
+            var pplInput = document.getElementById('pplInput');
+            var form = document.getElementById('uploadForm');
+
+            form.elements['ppl'].value = pplInput.value;
+            form.action = 'minutes-mnv.do';
+
+            form.submit();
+        }
+        function submitNoteSummaryForm() {
+            var pplInput = document.getElementById('pplInput');
+            var form = document.getElementById('uploadForm');
+
+            form.elements['ppl'].value = pplInput.value;
+            form.action = 'minutes-summary-mnv.do';
+
+            form.submit();
+        }
         document.querySelector('form').addEventListener('submit', function (e) {
             e.preventDefault();
             var formData = new FormData(this);
@@ -210,16 +233,17 @@
     </script>
 </head>
 <body>
-<h3>ARKEEPER</h3>
-<form method="post" enctype="multipart/form-data" id="uploadForm">
+<h3 class="title">ARKEEPER</h3>
+<div class="container">
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
 
-    <fieldset>
-    	<p>File : 
-    		<span id="fileNameDisplay"></span>
-		    <label for="file-upload" class="custom-file-input">Choose File
-		    <input id="file-upload" type="file" name="file" onchange="updateFileInfo()">
-		    </label>
-		</p>
+         <fieldset>
+       <p>File : 
+          <span id="fileNameDisplay"></span>
+          <label for="file-upload" class="custom-file-input">Choose File
+          <input id="file-upload" type="file" name="file" onchange="updateFileInfo()">
+          </label>
+      </p>
         <table id="fileInfoTable">
         <tr>
             <th>&nbsp File &nbsp</th>
@@ -233,24 +257,31 @@
             <td>&nbsp Size &nbsp</td>
             <td id="fileSizeCell"></td>
         </tr>
-   		</table>
+         </table>
         <p>
-        	<input type="submit" value="Summarize" onclick="javascript: form.action='summarize-vid-mnv.do'">
-        	&nbsp<input type="submit" value="Extract Tags" onclick="javascript: form.action='extract-tag-mnv.do'">
-        	<%--&nbsp<input type="submit" value="Location" onclick="javascript: form.action='install-guide.do'">--%>
+           <input type="submit" value="Summarize" onclick="javascript: form.action='summarize-vid-mnv.do'">
+           &nbsp<input type="submit" value="Extract Tags" onclick="javascript: form.action='extract-tag-mnv.do'">
+           <%--&nbsp<input type="submit" value="Location" onclick="javascript: form.action='install-guide.do'">--%>
         </p>
         <p>
             Search For : <input type="text" name="searchfor" id="searchforInput" placeholder="키워드를 입력해주세요">&nbsp&nbsp&nbsp
             <%-- Python Path : <input type="text" name="locOfPython" id="pythonPath">&nbsp&nbsp&nbsp --%>
             <input type="button" value="Extract Timestamp" onclick="submitTimestampForm()">
         </p>
+        <p>
+             회의 참여 인원: <input type="text" name="ppl" id="pplInput" placeholder="회의에 참여한 인원을 입력하세요">&nbsp&nbsp&nbsp
+            <%-- Python Path : <input type="text" name="locOfPython" id="pythonPath">&nbsp&nbsp&nbsp --%>
+            <input type="button" value="회의록 작성" onclick="submitNoteForm()">
+            <input type="button" value="회의록 요약" onclick="submitNoteSummaryForm()">
+        </p>
         <%--<p><input type="reset" value="Cancel"></p>--%>
     </fieldset>
-</form>
+        
+    </form>
 
-<div id="result" style="display: none;">
-    <textarea rows="10" cols="50"></textarea>
+    <div id="result" style="display: none;">
+        <textarea rows="10" cols="50"></textarea>
+    </div>
 </div>
-
 </body>
 </html>

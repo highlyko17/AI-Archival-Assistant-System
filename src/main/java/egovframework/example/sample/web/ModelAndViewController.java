@@ -57,7 +57,7 @@ public class ModelAndViewController {
 	private static final Logger logger = LogManager.getLogger(EgovSampleController.class);
 
 	@PostMapping("summarize-vid-mnv.do")
-	public ModelAndView summaryUsingWhisper(@RequestParam("file") MultipartFile file, HttpServletRequest request)
+	public ModelAndView summaryUsingWhisperMnV(@RequestParam("file") MultipartFile file, HttpServletRequest request)
 			throws IOException, InterruptedException {
 		long startTime = System.currentTimeMillis();
 		HttpHeaders headers = new HttpHeaders();
@@ -125,7 +125,7 @@ public class ModelAndViewController {
 	}
 	
 	@PostMapping("/extract-tag-mnv.do")
-	public ModelAndView extractTagsUsingWhisper(@RequestParam("file") MultipartFile file, HttpServletRequest request)
+	public ModelAndView extractTagsUsingWhisperMnV(@RequestParam("file") MultipartFile file, HttpServletRequest request)
 	        throws IOException, InterruptedException {
 		long startTime = System.currentTimeMillis();
 		HttpHeaders headers = new HttpHeaders();
@@ -204,7 +204,7 @@ public class ModelAndViewController {
 	}
 	
 	 @PostMapping("/timestamp-mnv.do")
-     public ModelAndView extractTimestamp(
+     public ModelAndView extractTimestampMnV(
            @RequestParam MultipartFile file, 
            @RequestParam("searchfor") String searchfor, 
            @RequestParam(name = "lang", required = false) String lang,
@@ -298,5 +298,190 @@ public class ModelAndViewController {
         
         return modelAndView;
      }
+	 
+	 @PostMapping("/minutes-mnv.do")
+		@ResponseBody
+		public ModelAndView extractTimestampMnV(@RequestParam MultipartFile file,
+				@RequestParam(name = "ppl", required = false) String ppl, HttpServletRequest request)
+				throws IOException, InterruptedException {
+			OpenAiService service = new OpenAiService(Keys.OPENAPI_KEY, Duration.ofMinutes(9999));
+	        long startTime = System.currentTimeMillis();
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
+	        Map<String, String> response = new HashMap<>();// 결과를 맵핑할 변
+
+	        ServletContext context = request.getSession().getServletContext();
+	        String projectPath = context.getRealPath("/");
+	        String absolutePathString = "";
+
+	        
+	        logger.debug("projectPath: " + projectPath);
+	        if(ppl!=null) {
+	           logger.debug("lang: " + ppl);
+	        }
+
+	        /* OS detection */
+	        OSDetect osd = new OSDetect(projectPath);
+	        
+	        
+	        FileController fc = new FileController(response, file, osd);
+	        fc.exist();
+	        response = fc.sizing();
+			
+	        logger.debug("Project Path: " + projectPath);
+
+	        absolutePathString = fc.setAbsolutePath();
+	        String origin_absolutePathString = new String(absolutePathString);
+	        logger.debug("AbsolutePathString received: " + absolutePathString);
+	        
+	        File extractedAudio = null;
+	        extractedAudio = fc.runFfmpeg(extractedAudio);
+			if (extractedAudio != null && extractedAudio.length() > 26214400) {
+				ModelAndView modelAndView = new ModelAndView();
+			    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+			    return modelAndView;
+			}
+
+
+			
+
+			String falskUrl = "http://172.17.200.193:8888/take-minutes";
+
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.getMessageConverters()
+		    .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+
+			// JSON 객체 생성
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode requestBody = mapper.createObjectNode();
+			requestBody.put("absolutePathString", absolutePathString);
+			requestBody.put("ppl", ppl);
+
+			
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
+
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			
+			String noteResult = responseEntity.getBody();
+			
+			
+			long endTime = System.currentTimeMillis();
+			long executionTime = endTime - startTime;
+			logger.info("Execution time:" + executionTime);
+			logger.debug(responseEntity);
+			
+			Result rslt = new Result();
+			response = rslt.getResult(response, fc.getFile_size(), noteResult, executionTime);
+
+
+
+			fc.deleteFile(origin_absolutePathString);
+
+
+			ModelAndView modelAndView = new ModelAndView();
+	        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
+	        modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
+
+	        return modelAndView;
+
+		}
+	 @PostMapping("/minutes-summary-mnv.do")
+		@ResponseBody
+		public ModelAndView MinuteSummaryMnV(@RequestParam MultipartFile file,
+				@RequestParam(name = "ppl", required = false) String ppl, HttpServletRequest request)
+				throws IOException, InterruptedException {
+			OpenAiService service = new OpenAiService(Keys.OPENAPI_KEY, Duration.ofMinutes(9999));
+	        long startTime = System.currentTimeMillis();
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
+	        Map<String, String> response = new HashMap<>();// 결과를 맵핑할 변
+
+	        ServletContext context = request.getSession().getServletContext();
+	        String projectPath = context.getRealPath("/");
+	        String absolutePathString = "";
+
+	        
+	        logger.debug("projectPath: " + projectPath);
+	        if(ppl!=null) {
+	           logger.debug("lang: " + ppl);
+	        }
+
+	        /* OS detection */
+	        OSDetect osd = new OSDetect(projectPath);
+	        
+	        
+	        FileController fc = new FileController(response, file, osd);
+	        fc.exist();
+	        response = fc.sizing();
+			
+	        logger.debug("Project Path: " + projectPath);
+
+	        absolutePathString = fc.setAbsolutePath();
+	        String origin_absolutePathString = new String(absolutePathString);
+	        logger.debug("AbsolutePathString received: " + absolutePathString);
+	        
+	        File extractedAudio = null;
+	        extractedAudio = fc.runFfmpeg(extractedAudio);
+			if (extractedAudio != null && extractedAudio.length() > 26214400) {
+				ModelAndView modelAndView = new ModelAndView();
+			    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+			    return modelAndView;
+			}
+
+
+			
+
+			String falskUrl = "http://172.17.200.193:8888/take-minutes";
+
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.getMessageConverters()
+		    .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+
+			// JSON 객체 생성
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode requestBody = mapper.createObjectNode();
+			requestBody.put("absolutePathString", absolutePathString);
+			requestBody.put("ppl", ppl);
+
+			
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
+
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			
+			String noteResult = responseEntity.getBody();
+			
+			List<ChatMessage> message = new ArrayList<ChatMessage>();
+			message.add(new ChatMessage("user", "다음 회의록을 700token 이하로 요약해. 잘하면 상을 줄게" + noteResult + "\""));
+			
+			ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(message)
+					.model("gpt-3.5-turbo-16k")
+					.maxTokens(700).temperature((double) 0.5f).build();
+			String summary_result = service.createChatCompletion(completionRequest).getChoices().get(0).getMessage()
+					.getContent();
+			
+			long endTime = System.currentTimeMillis();
+			long executionTime = endTime - startTime;
+			logger.info("Execution time:" + executionTime);
+			logger.debug(responseEntity);
+			
+			Result rslt = new Result();
+			response = rslt.getResult(response, fc.getFile_size(), summary_result, executionTime);
+
+
+
+			fc.deleteFile(origin_absolutePathString);
+
+
+			ModelAndView modelAndView = new ModelAndView();
+	        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
+	        modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
+
+	        return modelAndView;
+
+		}
 
 }
