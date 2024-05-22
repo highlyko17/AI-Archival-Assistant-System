@@ -203,101 +203,93 @@ public class ModelAndViewController {
         return modelAndView;
 	}
 	
-	 @PostMapping("/timestamp-mnv.do")
-     public ModelAndView extractTimestampMnV(
-           @RequestParam MultipartFile file, 
-           @RequestParam("searchfor") String searchfor, 
-           @RequestParam(name = "lang", required = false) String lang,
-           @RequestParam(name = "locOfPython", required = false) String locOfPython,
-           HttpServletRequest request)
-           throws IOException, InterruptedException {
-        long startTime = System.currentTimeMillis();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
-        Map<String, String> response = new HashMap<>();// 결과를 맵핑할 변
-
-        ServletContext context = request.getSession().getServletContext();
-        String projectPath = context.getRealPath("/");
-        String absolutePathString = "";
-        logger.debug("searchfor: " + searchfor);
-        if (locOfPython == null||locOfPython.isEmpty()) {
-       	    logger.debug("emptylocOfPython" );
-       	    locOfPython = null;
-       	}
-        
-        logger.debug("locOfPython: " + "\""+locOfPython+ "\"");
-        
-        logger.debug("projectPath: " + projectPath);
-        if(lang!=null) {
-           logger.debug("lang: " + lang);
-        }
-
-        /* OS detection */
-        OSDetect osd = new OSDetect(projectPath);
-        osd.whisperDetection();
-        
-        Path resource_path = Paths.get(osd.getResource_address());
-//        if (!Files.exists(resource_path)) {
-//            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
-//            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
-//            
-//            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String jsonResponse = objectMapper.writeValueAsString(response);
-//            return new ResponseEntity<>(jsonResponse, headers, HttpStatus.OK);
+//	 @PostMapping("/timestamp-mnv.do")
+//     public ModelAndView extractTimestampMnV(
+//           @RequestParam MultipartFile file, 
+//           @RequestParam("searchfor") String searchfor, 
+//           @RequestParam(name = "lang", required = false) String lang,
+//           @RequestParam(name = "locOfPython", required = false) String locOfPython,
+//           HttpServletRequest request)
+//           throws IOException, InterruptedException {
+//        long startTime = System.currentTimeMillis();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
+//        Map<String, String> response = new HashMap<>();// 결과를 맵핑할 변
+//
+//        ServletContext context = request.getSession().getServletContext();
+//        String projectPath = context.getRealPath("/");
+//        String absolutePathString = "";
+//        logger.debug("searchfor: " + searchfor);
+//        if (locOfPython == null||locOfPython.isEmpty()) {
+//       	    logger.debug("emptylocOfPython" );
+//       	    locOfPython = null;
+//       	}
+//        
+//        logger.debug("locOfPython: " + "\""+locOfPython+ "\"");
+//        
+//        logger.debug("projectPath: " + projectPath);
+//        if(lang!=null) {
+//           logger.debug("lang: " + lang);
 //        }
-        
-        FileController fc = new FileController(response, file, osd);
-        fc.exist();
-        response = fc.sizing();
-		
-        logger.debug("Project Path: " + projectPath);
-
-        absolutePathString = fc.setAbsolutePath();
-        String origin_absolutePathString = new String(absolutePathString);
-        logger.debug("AbsolutePathString received: " + absolutePathString);
-        
-        File extractedAudio = null;
-        extractedAudio = fc.runFfmpeg(extractedAudio);
-        if (extractedAudio != null && extractedAudio.length() > 26214400) {
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
-			modelAndView.addObject("errorMessage", "오디오만 추출했음에도 파일의 크기가 26214400bytes를 초과합니다. 파일을 분할하여 주세요.");
-			return modelAndView;
-		}
-        
-        
-        PythonModifier pc = new PythonModifier(osd, locOfPython, lang, absolutePathString);
-        String whisperCommand = pc.getWhisperCommand();
-        logger.debug("whisperCommand: " + whisperCommand);
-        
-        WhisperController wc = new WhisperController();
-        wc.startWhisperProcess(osd, pc);
-        
-        String srt_content = osd.makeSrt(osd, fc);
-        //file_size = extractedAudio.length();
-        
-        String summary_result = wc.getSrtResult(srt_content, searchfor);
-        
-        long endTime = System.currentTimeMillis();
-        long executionTime = endTime - startTime;
-        logger.info("Execution time:"+executionTime);
-        logger.debug(summary_result);
-        
-        Result rslt = new Result();
-        response = rslt.getResult(response, fc.getFile_size(), summary_result, executionTime, srt_content);
-
-        //ObjectMapper objectMapper = new ObjectMapper();
-        //String jsonResponse = objectMapper.writeValueAsString(response);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
-		modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
-		
-        fc.deleteFile(origin_absolutePathString);
-        fc.deleteSrtFile(osd.getSrt_address());
-        
-        return modelAndView;
-     }
+//
+//        /* OS detection */
+//        OSDetect osd = new OSDetect(projectPath);
+//        osd.whisperDetection();
+//        
+//        Path resource_path = Paths.get(osd.getResource_address());
+//
+//        
+//        FileController fc = new FileController(response, file, osd);
+//        fc.exist();
+//        response = fc.sizing();
+//		
+//        logger.debug("Project Path: " + projectPath);
+//
+//        absolutePathString = fc.setAbsolutePath();
+//        String origin_absolutePathString = new String(absolutePathString);
+//        logger.debug("AbsolutePathString received: " + absolutePathString);
+//        
+//        File extractedAudio = null;
+//        extractedAudio = fc.runFfmpeg(extractedAudio);
+//        if (extractedAudio != null && extractedAudio.length() > 26214400) {
+//			ModelAndView modelAndView = new ModelAndView();
+//			modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+//			modelAndView.addObject("errorMessage", "오디오만 추출했음에도 파일의 크기가 26214400bytes를 초과합니다. 파일을 분할하여 주세요.");
+//			return modelAndView;
+//		}
+//        
+//        
+//        PythonModifier pc = new PythonModifier(osd, locOfPython, lang, absolutePathString);
+//        String whisperCommand = pc.getWhisperCommand();
+//        logger.debug("whisperCommand: " + whisperCommand);
+//        
+//        WhisperController wc = new WhisperController();
+//        wc.startWhisperProcess(osd, pc);
+//        
+//        String srt_content = osd.makeSrt(osd, fc);
+//        //file_size = extractedAudio.length();
+//        
+//        String summary_result = wc.getSrtResult(srt_content, searchfor);
+//        
+//        long endTime = System.currentTimeMillis();
+//        long executionTime = endTime - startTime;
+//        logger.info("Execution time:"+executionTime);
+//        logger.debug(summary_result);
+//        
+//        Result rslt = new Result();
+//        response = rslt.getResult(response, fc.getFile_size(), summary_result, executionTime, srt_content);
+//
+//        //ObjectMapper objectMapper = new ObjectMapper();
+//        //String jsonResponse = objectMapper.writeValueAsString(response);
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
+//		modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
+//		
+//        fc.deleteFile(origin_absolutePathString);
+//        fc.deleteSrtFile(osd.getSrt_address());
+//        
+//        return modelAndView;
+//     }
 	 
 	 @PostMapping("/minutes-mnv.do")
 		@ResponseBody
@@ -321,21 +313,41 @@ public class ModelAndViewController {
 	        }
 
 	        /* OS detection */
-	        OSDetect osd = new OSDetect(projectPath);
-	        
-	        
-	        FileController fc = new FileController(response, file, osd);
-	        fc.exist();
-	        response = fc.sizing();
+			OSDetect osd = new OSDetect(projectPath);
+			osd.detection();
 			
-	        logger.debug("Project Path: " + projectPath);
-
-	        absolutePathString = fc.setAbsolutePath();
-	        String origin_absolutePathString = new String(absolutePathString);
-	        logger.debug("AbsolutePathString received: " + absolutePathString);
-	        
-	        File extractedAudio = null;
-	        extractedAudio = fc.runFfmpeg(extractedAudio);
+			Path resource_path = Paths.get(osd.getResource_address());
+	        if (!Files.exists(resource_path)) {
+	            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
+	            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
+	            
+	            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
+	            ObjectMapper objectMapper = new ObjectMapper();
+	            String jsonResponse = objectMapper.writeValueAsString(response);
+	            
+	        }
+			
+			FileController fc = new FileController(response, file, osd);
+			fc.exist();
+			response = fc.sizing();
+			
+			logger.debug("Project Path: " + projectPath);
+			
+			absolutePathString = fc.setAbsolutePath();
+			String origin_absolutePathString = new String(absolutePathString);
+			logger.debug("AbsolutePathString received" + absolutePathString);
+			
+			File extractedAudio = null;
+			/* ffmpeg */
+			extractedAudio = fc.runFfmpeg(extractedAudio);
+			
+			
+			WhisperController wc = new WhisperController();
+			
+			if(extractedAudio!=null) {
+				String extractedAudiFilePath = extractedAudio.getAbsolutePath();
+				absolutePathString = extractedAudiFilePath;
+			}
 			if (extractedAudio != null && extractedAudio.length() > 26214400) {
 				ModelAndView modelAndView = new ModelAndView();
 			    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
@@ -345,7 +357,7 @@ public class ModelAndViewController {
 
 			
 
-			String falskUrl = "http://172.17.200.193:8888/take-minutes";
+			String falskUrl = "http://192.168.0.123:8888/take-minutes";
 
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters()
@@ -382,12 +394,13 @@ public class ModelAndViewController {
 
 			ModelAndView modelAndView = new ModelAndView();
 	        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
-	        modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
+	        modelAndView.addObject("arkeeperresult", noteResult); // 결과 데이터를 모델에 추가
+	        logger.debug(noteResult);
 
 	        return modelAndView;
 
 		}
-	 @PostMapping("/minutes-summary-mnv.do")
+	 	@PostMapping("/minutes-summary-mnv.do")
 		@ResponseBody
 		public ModelAndView MinuteSummaryMnV(@RequestParam MultipartFile file,
 				@RequestParam(name = "ppl", required = false) String ppl, HttpServletRequest request)
@@ -405,25 +418,45 @@ public class ModelAndViewController {
 	        
 	        logger.debug("projectPath: " + projectPath);
 	        if(ppl!=null) {
-	           logger.debug("lang: " + ppl);
+	           logger.debug("ppl: " + ppl);
 	        }
 
 	        /* OS detection */
-	        OSDetect osd = new OSDetect(projectPath);
-	        
-	        
-	        FileController fc = new FileController(response, file, osd);
-	        fc.exist();
-	        response = fc.sizing();
+			OSDetect osd = new OSDetect(projectPath);
+			osd.detection();
 			
-	        logger.debug("Project Path: " + projectPath);
-
-	        absolutePathString = fc.setAbsolutePath();
-	        String origin_absolutePathString = new String(absolutePathString);
-	        logger.debug("AbsolutePathString received: " + absolutePathString);
-	        
-	        File extractedAudio = null;
-	        extractedAudio = fc.runFfmpeg(extractedAudio);
+			Path resource_path = Paths.get(osd.getResource_address());
+	        if (!Files.exists(resource_path)) {
+	            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
+	            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
+	            
+	            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
+	            ObjectMapper objectMapper = new ObjectMapper();
+	            String jsonResponse = objectMapper.writeValueAsString(response);
+	            
+	        }
+			
+			FileController fc = new FileController(response, file, osd);
+			fc.exist();
+			response = fc.sizing();
+			
+			logger.debug("Project Path: " + projectPath);
+			
+			absolutePathString = fc.setAbsolutePath();
+			String origin_absolutePathString = new String(absolutePathString);
+			logger.debug("AbsolutePathString received" + absolutePathString);
+			
+			File extractedAudio = null;
+			/* ffmpeg */
+			extractedAudio = fc.runFfmpeg(extractedAudio);
+			
+			
+			WhisperController wc = new WhisperController();
+			
+			if(extractedAudio!=null) {
+				String extractedAudiFilePath = extractedAudio.getAbsolutePath();
+				absolutePathString = extractedAudiFilePath;
+			}
 			if (extractedAudio != null && extractedAudio.length() > 26214400) {
 				ModelAndView modelAndView = new ModelAndView();
 			    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
@@ -433,7 +466,7 @@ public class ModelAndViewController {
 
 			
 
-			String falskUrl = "http://172.17.200.193:8888/take-minutes";
+			String falskUrl = "http://192.168.0.123:8888/take-minutes";
 
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters()
@@ -478,10 +511,130 @@ public class ModelAndViewController {
 
 			ModelAndView modelAndView = new ModelAndView();
 	        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
-	        modelAndView.addObject("arkeeperresult", response); // 결과 데이터를 모델에 추가
+	        modelAndView.addObject("arkeeperresult", summary_result); // 결과 데이터를 모델에 추가
+	        logger.debug(summary_result);
 
 	        return modelAndView;
 
 		}
+	 	@PostMapping("/timestamp-mnv.do")
+	     public ModelAndView extractTimestampMnV(
+	           @RequestParam MultipartFile file, 
+	           @RequestParam("searchfor") String searchfor, 
+	           @RequestParam(name = "lang", required = false) String lang,
+	           @RequestParam(name = "locOfPython", required = false) String locOfPython,
+	           HttpServletRequest request)
+	           throws IOException, InterruptedException {
+	 		OpenAiService service = new OpenAiService(Keys.OPENAPI_KEY, Duration.ofMinutes(9999));
+	        long startTime = System.currentTimeMillis();
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.add(HttpHeaders.CONTENT_TYPE, "text/plain;charset=UTF-8");
+	        Map<String, String> response = new HashMap<>();// 결과를 맵핑할 변
+
+	        ServletContext context = request.getSession().getServletContext();
+	        String projectPath = context.getRealPath("/");
+	        String absolutePathString = "";
+
+	        
+	        logger.debug("projectPath: " + projectPath);
+	        if(searchfor!=null) {
+	           logger.debug("searchfor: " + searchfor);
+	        }
+
+	        /* OS detection */
+			OSDetect osd = new OSDetect(projectPath);
+			osd.detection();
+			
+			Path resource_path = Paths.get(osd.getResource_address());
+	        if (!Files.exists(resource_path)) {
+	            logger.error("resource 폴더가 존재하지 않습니다. resource 폴더를 다운받아 주세요.");
+	            logger.error("resource 폴더를 둘 곳: "+ osd.getResource_address());
+	            
+	            response.put("Install the 'resource' folder at the following address: ", osd.getResource_address());
+	            ObjectMapper objectMapper = new ObjectMapper();
+	            String jsonResponse = objectMapper.writeValueAsString(response);
+	            
+	        }
+			
+			FileController fc = new FileController(response, file, osd);
+			fc.exist();
+			response = fc.sizing();
+			
+			logger.debug("Project Path: " + projectPath);
+			
+			absolutePathString = fc.setAbsolutePath();
+			String origin_absolutePathString = new String(absolutePathString);
+			logger.debug("AbsolutePathString received" + absolutePathString);
+			
+			File extractedAudio = null;
+			/* ffmpeg */
+			extractedAudio = fc.runFfmpeg(extractedAudio);
+			
+			
+			WhisperController wc = new WhisperController();
+			
+			if(extractedAudio!=null) {
+				String extractedAudiFilePath = extractedAudio.getAbsolutePath();
+				absolutePathString = extractedAudiFilePath;
+			}
+			if (extractedAudio != null && extractedAudio.length() > 26214400) {
+				ModelAndView modelAndView = new ModelAndView();
+			    modelAndView.setViewName("egovError.jsp"); // 에러를 보여줄 JSP 파일 경로 설정
+			    return modelAndView;
+			}
+
+
+			
+
+			String falskUrl = "http://192.168.0.123:8888/take-minutes";
+
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.getMessageConverters()
+		    .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+
+			// JSON 객체 생성
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode requestBody = mapper.createObjectNode();
+			requestBody.put("absolutePathString", absolutePathString);
+
+			
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
+
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			
+			String noteResult = responseEntity.getBody();
+			
+			List<ChatMessage> message = new ArrayList<ChatMessage>();
+			message.add(new ChatMessage("user",  "These are the content of srt file which is extraced from an audio file.'" + noteResult + "' From the srt content, find 'start' timestamp information related to '" + searchfor + "' and return the timestamp in json format. If there is no matching timestamp, just return {}. Remember to find only 'start' information."));
+			
+			ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(message)
+					.model("gpt-3.5-turbo-16k")
+					.maxTokens(700).temperature((double) 0.5f).build();
+			String extraction_result = service.createChatCompletion(completionRequest).getChoices().get(0).getMessage()
+					.getContent();
+			
+			long endTime = System.currentTimeMillis();
+			long executionTime = endTime - startTime;
+			logger.info("Execution time:" + executionTime);
+			logger.debug(responseEntity);
+			
+			Result rslt = new Result();
+			//response = rslt.getResult(response, fc.getFile_size(), extraction_result, executionTime);
+
+
+
+			fc.deleteFile(origin_absolutePathString);
+
+
+			ModelAndView modelAndView = new ModelAndView();
+	        modelAndView.setViewName("result"); // 반환할 JSP 파일 경로 설정
+	        modelAndView.addObject("arkeeperresult", extraction_result); // 결과 데이터를 모델에 추가
+	        logger.debug(extraction_result);
+
+	        return modelAndView;
+	 	}
+	 	
 
 }

@@ -606,14 +606,12 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
 	<div class="container">
 
 		<div class="tab">
-			<button class="tablinks" onclick="openTab(event, 'summary')">Summary</button>
-			<button class="tablinks" onclick="openTab(event, 'tag-extraction')">Tag
-				Extraction</button>
+			<button class="tablinks" onclick="openTab(event, 'summary')">Video Summary</button>
+			<button class="tablinks" onclick="openTab(event, 'tag-extraction')">Key Tags Extraction</button>
 			<button class="tablinks"
-				onclick="openTab(event, 'timestamp-extraction')">Timestamp
-				Extraction</button>
-			<button class="tablinks" onclick="openTab(event, 'meeting-summary')">Take Minute</button>
-			<button class="tablinks" onclick="openTab(event, 'meeting-minutes')">Minute Summarization</button>
+				onclick="openTab(event, 'timestamp-extraction')">Timestamp Extraction</button>
+			<button class="tablinks" onclick="openTab(event, 'meeting-summary')">Create Minutes</button>
+			<button class="tablinks" onclick="openTab(event, 'meeting-minutes')">Summarize Minutes</button>
 		</div>
 
 		<div id="summary" class="tab-content">
@@ -732,7 +730,7 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
                 </tr>
             </table>
             <p>
-                The number of participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
+                Participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
                 <span style="margin-right: 40px;"></span>
                 <input type="button" value="Execute" onclick="submitNoteForm()">
             </p>
@@ -764,7 +762,7 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
                 </tr>
             </table>
             <p>
-                The number of participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
+                Participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
                 <span style="margin-right: 40px;"></span>
                 <input type="button" value="Execute" onclick="submitNoteForm()">
             </p>

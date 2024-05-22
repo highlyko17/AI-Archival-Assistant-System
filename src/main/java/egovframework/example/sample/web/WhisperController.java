@@ -67,7 +67,7 @@ public class WhisperController {
 	public String getSrtResult(String srt_content, String searchfor) {
 		List<ChatMessage> message = new ArrayList<ChatMessage>();
         message.add(new ChatMessage("user",
-                "These are the content of srt file which is extraced from an audio file." + srt_content + "From the srt content, find timestamp related to " + searchfor + " and return the timestamp."));
+                "These are the content of srt file which is extraced from an audio file." + srt_content + "From the srt content, find timestamp related to or having '" + searchfor + "' and return the timestamp in json format. If there is no matching timestamp, just return {}"));
         
         ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(message)
                 .model("gpt-3.5-turbo-16k")
