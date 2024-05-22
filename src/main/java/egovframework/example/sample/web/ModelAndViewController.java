@@ -55,7 +55,7 @@ import egovframework.example.API.Keys;
 @Controller
 public class ModelAndViewController {
 	private static final Logger logger = LogManager.getLogger(EgovSampleController.class);
-
+	String flaskurl ="http://172.17.200.193:8888/take-minutes";
 	@PostMapping("summarize-vid-mnv.do")
 	public ModelAndView summaryUsingWhisperMnV(@RequestParam("file") MultipartFile file, HttpServletRequest request)
 			throws IOException, InterruptedException {
@@ -184,7 +184,7 @@ public class ModelAndViewController {
 
 		fc.deleteFile(origin_absolutePathString);
 		
-		String str = "다음 텍스트의 주요한 태그를 중요한 순서대로 5개를 쉼표를 구분자로 사용해서 추출해줘. 잘하면 상을 줄게: \"";
+		String str = "Extract the five most important tags of the following text in JSON format, separated by commas, in descending order of importance. Do it well and you might earn a reward. text: \"";
 		String summary_result = wc.getResult(str);
 
 		Result rslt = new Result();
@@ -357,7 +357,7 @@ public class ModelAndViewController {
 
 			
 
-			String falskUrl = "http://192.168.0.123:8888/take-minutes";
+			//String falskUrl = "http://192.168.0.123:8888/take-minutes";
 
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters()
@@ -374,7 +374,7 @@ public class ModelAndViewController {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
 
-			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(flaskurl, requestEntity, String.class);
 			
 			String noteResult = responseEntity.getBody();
 			
@@ -466,7 +466,7 @@ public class ModelAndViewController {
 
 			
 
-			String falskUrl = "http://192.168.0.123:8888/take-minutes";
+			//String falskUrl = "http://192.168.0.123:8888/take-minutes";
 
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters()
@@ -483,7 +483,7 @@ public class ModelAndViewController {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
 
-			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(flaskurl, requestEntity, String.class);
 			
 			String noteResult = responseEntity.getBody();
 			
@@ -586,7 +586,7 @@ public class ModelAndViewController {
 
 			
 
-			String falskUrl = "http://192.168.0.123:8888/take-minutes";
+			//String falskUrl = "http://192.168.0.123:8888/take-minutes";
 
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters()
@@ -602,7 +602,7 @@ public class ModelAndViewController {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			HttpEntity<String> requestEntity = new HttpEntity<>(requestBody.toString(), headers);
 
-			ResponseEntity<String> responseEntity = restTemplate.postForEntity(falskUrl, requestEntity, String.class);
+			ResponseEntity<String> responseEntity = restTemplate.postForEntity(flaskurl, requestEntity, String.class);
 			
 			String noteResult = responseEntity.getBody();
 			

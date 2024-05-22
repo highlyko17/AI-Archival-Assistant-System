@@ -8,6 +8,14 @@
 		<link rel="stylesheet" href="sample.css">
 		<!-- Linking the CSS file -->
 			<style>
+				img.title {
+				  display: block; /* 이미지를 블록 레벨 요소로 설정 */
+				  margin: 0 auto; /* 가로 방향 마진을 auto로 설정하여 가운데 정렬 */
+				  padding: 20px;
+				  max-width: 100%; /* 이미지 너비가 부모 요소를 초과하지 않도록 설정 */
+				  height: auto; /* 이미지 높이를 자동으로 설정하여 비율 유지 */
+				  margin-bottom:-40px;
+				}
 				body {
 					font-family: font-family : -apple-system, BlinkMacSystemFont, sans-serif;
 					margin: 0;
@@ -56,7 +64,7 @@
 			</style>
 	</head>
 	<body>
-		<h3>Result</h3>
+		<img class="title" src="/images/egovframework/arkeeperlogo/FullLogo_Transparent.png" alt="Description of the image" width="320" height="256">
 		<div class="summary-container">
 			<p>${arkeeperresult}</p>
 		</div>

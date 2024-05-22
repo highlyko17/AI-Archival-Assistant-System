@@ -14,37 +14,41 @@ p input[type="submit"] {
 	margin-right: 5%;
 }
 .tab {
-	display: flex;
-	justify-content: space-around;
-	margin-bottom: 20px;
+   display: flex;
+   justify-content: flex-start;
+   margin-bottom: 0;
 }
 
 .tab button {
-	padding: 10px 20px;
-	border: none;
-	border-radius: 5px 5px 0 0;
-	background-color: #f2f2f2;
-	cursor: pointer;
-	
+   padding: 10px 20px;
+   border: none; /* 테두리 제거 */
+   border-radius: 5px 5px 0 0;
+   background-color: #f2f2f2;
+   cursor: pointer;
+   margin-right: -1px; /* 버튼들이 붙도록 설정 */
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+   transition: background-color 0.3s;
 }
 
 .tab button.active {
-	background-color: #1b5f9e;
-	color:#fff;
-	font-weight: bold;
-	
+   background-color: #1b5f9e;
+   color: #fff;
+   font-weight: bold;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 더 진한 그림자 */
 }
 
 .tab-content {
-	display: none;
-	padding: 20px;
-	background-color: #f2f2f2;
-	border-radius: 0 0 5px 5px;
+   display: none;
+   padding: 20px;
+   background-color: #f2f2f2;
+   border-radius: 0 0 5px 5px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
 
 .tab-content.active {
-	display: block;
+   display: block;
 }
+
 
 .custom-file-input {
 	display: inline-block;
@@ -103,6 +107,7 @@ img.title {
 	text-align: center;
 	padding: 20px;
 	margin-top: -90px;
+	margin-bottom:-40px;
 }
 
 fieldset {
@@ -264,7 +269,7 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
 
     function submitNoteForm() {
         var pplInput = document.getElementById('pplInput');
-        var form = document.getElementById('uploadFormMeetingSummary');
+        var form = document.getElementById('uploadFormMeetingMinutes');
 
         form.elements['ppl'].value = pplInput.value;
         form.action = 'minutes-mnv.do';
@@ -273,8 +278,8 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
     }
 
     function submitNoteSummaryForm() {
-        var pplInput = document.getElementById('pplInput');
-        var form = document.getElementById('uploadFormMeetingMinutes');
+        var pplInput = document.getElementById('pplInput-summary');
+        var form = document.getElementById('uploadFormMeetingSummary');
 
         form.elements['ppl'].value = pplInput.value;
         form.action = 'minutes-summary-mnv.do';
@@ -329,8 +334,8 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
 			<button class="tablinks" onclick="openTab(event, 'tag-extraction')">Key Tags Extraction</button>
 			<button class="tablinks"
 				onclick="openTab(event, 'timestamp-extraction')">Timestamp Extraction</button>
-			<button class="tablinks" onclick="openTab(event, 'meeting-summary')">Create Minutes</button>
-			<button class="tablinks" onclick="openTab(event, 'meeting-minutes')">Summarize Minutes</button>
+			<button class="tablinks" onclick="openTab(event, 'meeting-minutes')">Create Minutes</button>
+			<button class="tablinks" onclick="openTab(event, 'meeting-summary')">Summarize Minutes</button>
 		</div>
 
 		<div id="summary" class="tab-content">
@@ -425,38 +430,6 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
     </form>
 </div>
 
-<div id="meeting-summary" class="tab-content">
-    <form method="post" enctype="multipart/form-data" id="uploadFormMeetingSummary">
-        <fieldset>
-            <p>
-                File: <span id="fileNameDisplay-meeting-summary"></span>
-                <label for="file-upload-meeting-summary" class="custom-file-input">Choose File
-                    <input id="file-upload-meeting-summary" type="file" name="file" onchange="updateFileInfo('meeting-summary')">
-                </label>
-            </p>
-            <table id="fileInfoTable-meeting-summary">
-                <tr>
-                    <th>&nbsp File &nbsp</th>
-                    <th>&nbsp Info &nbsp</th>
-                </tr>
-                <tr>
-                    <td>&nbsp Type &nbsp</td>
-                    <td id="fileTypeCell"></td>
-                </tr>
-                <tr>
-                    <td>&nbsp Size &nbsp</td>
-                    <td id="fileSizeCell"></td>
-                </tr>
-            </table>
-            <p>
-                Participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
-                <span style="margin-right: 40px;"></span>
-                <input type="button" value="Execute" onclick="submitNoteForm()" class="custom-button">
-            </p>
-        </fieldset>
-    </form>
-</div>
-
 <div id="meeting-minutes" class="tab-content">
     <form method="post" enctype="multipart/form-data" id="uploadFormMeetingMinutes">
         <fieldset>
@@ -484,6 +457,38 @@ input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hove
                 Participants: <input type="text" name="ppl" id="pplInput" placeholder="(optional)">
                 <span style="margin-right: 40px;"></span>
                 <input type="button" value="Execute" onclick="submitNoteForm()" class="custom-button">
+            </p>
+        </fieldset>
+    </form>
+</div>
+
+<div id="meeting-summary" class="tab-content">
+    <form method="post" enctype="multipart/form-data" id="uploadFormMeetingSummary">
+        <fieldset>
+            <p>
+                File: <span id="fileNameDisplay-meeting-summary"></span>
+                <label for="file-upload-meeting-summary" class="custom-file-input">Choose File
+                    <input id="file-upload-meeting-summary" type="file" name="file" onchange="updateFileInfo('meeting-summary')">
+                </label>
+            </p>
+            <table id="fileInfoTable-meeting-summary">
+                <tr>
+                    <th>&nbsp File &nbsp</th>
+                    <th>&nbsp Info &nbsp</th>
+                </tr>
+                <tr>
+                    <td>&nbsp Type &nbsp</td>
+                    <td id="fileTypeCell"></td>
+                </tr>
+                <tr>
+                    <td>&nbsp Size &nbsp</td>
+                    <td id="fileSizeCell"></td>
+                </tr>
+            </table>
+            <p>
+                Participants: <input type="text" name="ppl" id="pplInput-summary" placeholder="(optional)">
+                <span style="margin-right: 40px;"></span>
+                <input type="button" value="Execute" onclick="submitNoteSummaryForm()" class="custom-button">
             </p>
         </fieldset>
     </form>
