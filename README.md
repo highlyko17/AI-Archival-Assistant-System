@@ -8,7 +8,7 @@ OpenAI의 Whisper 모델을 사용하여 자동으로 오디오나 영상 기록
 [설치 및 사용가이드 참고](guide.pdf)
 
 ## 📝 포스터
-![poster](poster.png){: width="70%" height="70%"}
+![poster](poster.png)
 
 ## 🛠️ 개발자
 **🧑🏻‍💻 지우형**
